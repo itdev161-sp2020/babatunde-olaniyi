@@ -1,20 +1,20 @@
 import mongoose from 'mongoose';
 import config from 'config';
 
-// Get connection string
+// Get the connection string
 const db = config.get('mongoURI');
 
-// Connect to MongoDB
+// Connect the mongoDB
 const connectDatabase = async () => {
     try{
         await mongoose.connect(db, {
             useUnifiedTopology: true
         });
         console.log('Connected to MongoDB');
-    } catch(error){
+    }catch(error) {
         console.error(error.message);
 
- // Exit with failure code
+  // Exit with failure code
         process.exit(1);
     }
 };
