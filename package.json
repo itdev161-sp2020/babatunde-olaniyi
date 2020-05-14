@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+ 
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r esm server.js",
-    "server": "nodemon -r esm server.js"
+    "server": "nodemon -r esm server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -24,7 +27,7 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-validator": "^6.4.1",
-    "mongoose": "^5.9.13"
+    "mongoose": "^5.9.14"
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
