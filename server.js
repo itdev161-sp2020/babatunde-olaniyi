@@ -1,5 +1,5 @@
 import express from 'express';
-import connectDatabase from './config/db.js';
+import connectDatabase from '../config/db.js';
 import { check, validationResult } from 'express-validator';
 
 //Initialize express application
