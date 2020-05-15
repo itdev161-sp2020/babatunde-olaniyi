@@ -1,7 +1,7 @@
 import express from 'express';
 import connectDatabase from './config/db';
 import { check, validationResult } from 'express-validator';//importing check and validationResult which are named exports (hence the curly braces)
-//no braces will import whatever the default export
+                                                            //no braces will import whatever the default export
 import cors from 'cors';   //allow CORS
 import bcrypt from 'bcryptjs'; //used to encrypt password
 import User from './models/User'; //our model to create users

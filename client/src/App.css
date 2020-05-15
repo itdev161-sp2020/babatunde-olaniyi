@@ -3,7 +3,8 @@
 }
 
 .App-logo {
-  height: 40vmin; /*pointer-events: none;*/
+  height: 40vmin;
+ /* pointer-events: none; */
 }
 
 /*
@@ -60,5 +61,12 @@ main {
   to {
     transform: rotate(360deg);
   }
+
+.App-link {
+  color: #09d3ac;
 }
 */
+
+main{
+  margin: 30px auto;
+}

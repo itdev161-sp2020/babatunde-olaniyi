@@ -1,7 +1,11 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
-const Register = () =>{
+//destructured parameter of authProps passed by App.tsx
+//This is where we receive the function we call on the bottom
+const Register = ({authenticateUser}) =>{
+    let history = useHistory();
     //destructuring assignment, unpack array into first element within []
     const[userData, setUserData] = useState({
         name: '',
@@ -10,16 +14,20 @@ const Register = () =>{
         passwordConfirm:''
     });
 
-   
-    const {name,email,password,passwordConfirm} = userData; //object destructuring, userData.name == the field in userData
-                                                           //with the 'name' key.
+    const [errorData, setErrorData]= useState({errors: null});
+
+    //object destructuring, userData.name == the field in userData
+    //with the 'name' key. (there is also array destructuring)
+    const {name,email,password,passwordConfirm} = userData;
+    const {errors} = errorData;
 
     //fat arrow function with e parameter
     const onChange = (e) =>{
         const {name,value} = e.target;
-        setUserData({  //spread userData into setUserData
-                        //set the event name key (matching our vars)
-                         //to the value associated withthe value key.
+        setUserData({
+            //spread userData into setUserData
+            //set the event name key (matching our vars)
+            //to the value associated withthe value key.
             ...userData,
             [name]:value
         })
@@ -27,7 +35,7 @@ const Register = () =>{
 
     //if password confirmation passes, set newUser fields to 
     //match our fields at this point.
-    const register = async () => {
+    const registerUser = async () => {
         if(password !== passwordConfirm){
             console.log('Passwords do not match');
         }
@@ -37,8 +45,8 @@ const Register = () =>{
                 email:email,
                 password:password
             }
-
-            try{  //try to add new user to database, otherwise log error
+            //try to add new user to database, otherwise log error
+            try{
                 const config ={
                     headers: {
                         'Content-Type' : 'application/json'
@@ -46,12 +54,21 @@ const Register = () =>{
                 }
 
                 const body = JSON.stringify(newUser);
-                const res = await axios.post('http://localhost:5000/api/users',body,config);
-                console.log(res.data);
+                const res = await axios.post('/api/users',body,config);
+               
+                //store user data and redirect
+                localStorage.setItem('token',res.data.token);
+                history.push('/');
+
             }catch(error){
-                console.error(error.response.data);
-                return;
+                localStorage.removeItem('token');
+
+                setErrorData({
+                    ...errors,
+                    errors: error.response.data.errors
+                })
              }
+             authenticateUser();
         }
     }
 
@@ -95,10 +112,15 @@ const Register = () =>{
                 />
             </div>
             <div>
-                <button onClick={()=>register()}>Register</button>
+                <button onClick={()=>registerUser()}>Register</button>
+            </div>
+            <div>
+                {errors && errors.map(error=>
+                    <div key={error.msg}>{error.msg}</div>)}
             </div>
         </div>
     )
 }
 
-export default Register;
+export default Register
+
