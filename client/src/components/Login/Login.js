@@ -5,20 +5,16 @@ import {useHistory} from 'react-router-dom';
 
 const Login = ({authenticateUser}) => {
     let history = useHistory();
-    //destructuring arrays vs objects []
     const [userData, setUserData] = useState({
         email: '',
         password: ''
     });
-    const [errorData, setErrorData] = useState({errors:null});
-
-    //object destructuring , pulls value from object , pulls value 
-    //from property with matching key
+    const [errorData, setErrorData] = useState({ errors:null });
     const {email,password} = userData;
     const {errors} = errorData;
 
-    const onChange = e =>{
-        const {name,value} = e.target;
+    const onChange = e => {
+        const {name, value} = e.target;
         setUserData({
             ...userData,
             [name]:value
@@ -32,7 +28,7 @@ const Login = ({authenticateUser}) => {
         }
 
         try{
-            const config ={
+            const config = {
                 headers: {
                     'Content-Type' : 'application/json'
                 }
@@ -56,18 +52,14 @@ const Login = ({authenticateUser}) => {
 
     return(
         <div>
-            <h2>
-                Log In
-            </h2>
-
+            <h2>Log In</h2>
             <div>
                 <input
                     type="text"
                     placeholder="Email"
                     name="email"
                     value={email}
-                    onChange={e=>onChange(e)}
-                />
+                    onChange={e=>onChange(e)} />
             </div>
             <div>
                 <input
@@ -75,8 +67,7 @@ const Login = ({authenticateUser}) => {
                     placeholder="Password"
                     name="password"
                     value={password}
-                    onChange={e=>onChange(e)}
-                />
+                    onChange={e=>onChange(e)} />
             </div>
             <div>
                 <button onClick={()=>loginUser()}>Log In</button>
