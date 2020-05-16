@@ -4,7 +4,7 @@ import {useHistory} from 'react-router-dom';
 
 //destructured parameter of authProps passed by App.tsx
 //This is where we receive the function we call on the bottom
-const Register = ({authenticateUser}) =>{
+const Register = ({ authenticateUser }) =>{
     let history = useHistory();
     //destructuring assignment, unpack array into first element within []
     const[userData, setUserData] = useState({
@@ -15,9 +15,6 @@ const Register = ({authenticateUser}) =>{
     });
 
     const [errorData, setErrorData]= useState({errors: null});
-
-    //object destructuring, userData.name == the field in userData
-    //with the 'name' key. (there is also array destructuring)
     const {name,email,password,passwordConfirm} = userData;
     const {errors} = errorData;
 
@@ -25,9 +22,6 @@ const Register = ({authenticateUser}) =>{
     const onChange = (e) =>{
         const {name,value} = e.target;
         setUserData({
-            //spread userData into setUserData
-            //set the event name key (matching our vars)
-            //to the value associated withthe value key.
             ...userData,
             [name]:value
         })
@@ -48,19 +42,19 @@ const Register = ({authenticateUser}) =>{
             //try to add new user to database, otherwise log error
             try{
                 const config ={
-                    headers: {
-                        'Content-Type' : 'application/json'
+                 headers: {
+                'Content-Type' : 'application/json'
                     }
                 }
 
                 const body = JSON.stringify(newUser);
-                const res = await axios.post('/api/users',body,config);
+                const res = await axios.post('https://localhost:5000/api/users', body, config);
                
                 //store user data and redirect
-                localStorage.setItem('token',res.data.token);
+                localStorage.setItem('token', res.data.token);
                 history.push('/');
 
-            }catch(error){
+            } catch(error){
                 localStorage.removeItem('token');
 
                 setErrorData({
@@ -112,10 +106,10 @@ const Register = ({authenticateUser}) =>{
                 />
             </div>
             <div>
-                <button onClick={()=>registerUser()}>Register</button>
+                <button onClick={() => registerUser()}>Register</button>
             </div>
             <div>
-                {errors && errors.map(error=>
+                {errors && errors.map(error =>
                     <div key={error.msg}>{error.msg}</div>)}
             </div>
         </div>
