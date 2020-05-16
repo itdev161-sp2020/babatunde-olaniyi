@@ -3,10 +3,11 @@ import connectDatabase from './config/db';
 import { check, validationResult } from 'express-validator';//importing check and validationResult which are named exports (hence the curly braces)                                                                                  
 import cors from 'cors';   //allow CORS
 import bcrypt from 'bcryptjs'; //used to encrypt password
-import User from './models/User'; //our model to create users
 import jwt from 'jsonwebtoken';  //import json web token
 import config from 'config'; //import config...
 import auth from './middleware/auth';
+import User from './models/User'; //our model to create users
+import User from './models/Post'; //our model to create users
 
 //Initialize express application
 const app = express(); 
@@ -192,6 +193,8 @@ app.post(
     }
 );
 
+
+
 const returnToken = (user,res) => {
     const payload = {
         user:{
@@ -210,6 +213,55 @@ const returnToken = (user,res) => {
     );
 };
  
+
+// Post endpoints
+/**
+ * @route POST api/posts
+ * @desc Create post
+ */
+
+app.post(
+    '/api/posts',
+    [
+      auth,
+      [
+        check('title', 'Title text is required')
+          .not()
+          .isEmpty(),
+        check('body', 'Body text is required')
+          .not()
+          .isEmpty()
+      ]
+    ],
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+      } else {
+        const { title, body } = req.body;
+        try {
+          // Get the user who created the post
+          const user = await User.findById(req.user.id);
+  
+          // Create a new post
+          const post = new Post({
+            user: user.id,
+            title: title,
+            body: body
+          });
+  
+          // Save to the db and return
+          await post.save();
+  
+          res.json(post);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Server error');
+        }
+      }
+    }
+  );
+  
     //connection listener
     //app.listen(3000, () => console.log('Express server running on port 3000'));
 const port = 5000;
