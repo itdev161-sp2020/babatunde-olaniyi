@@ -32,6 +32,8 @@ app.use(
 app.get('/', (req, res) =>
     res.send('http get request sent to root api endpoint')
 );
+app.get('/api/', (req, res) => res.send('http get request sent to api'));
+
 app.post(
     '/api/users',
     [
