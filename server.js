@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDatabase from './config/db';
-import {check, validationResult } from 'express-validator';//importing check and validationResult which are named exports (hence the curly braces)                                                      //no braces will import whatever the default export
+import { check, validationResult } from 'express-validator';//importing check and validationResult which are named exports (hence the curly braces)                         
+                                                            //no braces will import whatever the default export
 import cors from 'cors';   //allow CORS
 import bcrypt from 'bcryptjs'; //used to encrypt password
 import User from './models/User'; //our model to create users
@@ -36,14 +37,14 @@ app.get('/', (req, res) =>
 
  //AUTHORIZE
  //verify token and authenticate user 
- app.get('/api/auth',auth,async(req,res) => {
+ app.get('/api/auth',auth, async(req,res) => {
     try{
         const user = await User.findById(req.user.id);
         res.status(200).json(user);
-    }catch(error){
+    } catch(error){
         res.status(500).send('Unkown server error');
     }
-})
+});
  
  app.post(  //When a post is made to our 'api/users' page log the request body and respond with it.
       //destination
