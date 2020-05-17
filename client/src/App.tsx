@@ -10,14 +10,14 @@ class App extends React.Component {
 
   //hold data fetched from API
   state = {
-    data: null,
+    posts : [],
     token: null,
     user: null
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000')
-    .then((response) => {
+         axios.get('http://localhost:5000')
+          .then((response) => {
       this.setState ({
         data: response.data
       })
@@ -26,43 +26,80 @@ class App extends React.Component {
     .catch((error) => {
       console.error(`Error fetching data ${error}`);
     })
+
     this.authenticateUser();
 }
+
+
 authenticateUser =()=>{
   const token = localStorage.getItem('token');
 
-  if(!token){
-    localStorage.removeItem('user')
-    this.setState({user:null});
+       if(!token){
+       localStorage.removeItem('user')
+       this.setState({user:null});
   }
 
+ 
   if(token){
-    const config ={
+    const config = {
       headers:{
         'x-auth-token': token 
       }
-    }
+    };
     axios.get('http://localhost:5000/api/auth', config)
     .then((response)=>{
-      localStorage.setItem('user',response.data.name)
-      this.setState({user:response.data.name})
+      localStorage.setItem('user', response.data.name)
+      this.setState(
+        {
+          user:response.data.name,
+          token: token
+        },
+          () => {
+            this.loadData();
+          }
+      );
     })
-    .catch((error)=>{
+    .catch((error) => {
       localStorage.removeItem('user');
       this.setState({user:null});
       console.error(`Error logging in: ${error}`);
-    })
+    });
   }
-}
+};
 
-logOut =()=>{
+loadData = () => {
+  const { token } = this.state;
+
+  if (token) {
+    const config = {
+      headers: {
+        'x-auth-token': token
+      }
+    };
+    axios
+      .get('http://localhost:5000/api/posts', config)
+      .then(response => {
+        this.setState({
+          posts: response.data
+        });
+      })
+      .catch(error => {
+        console.error(`Error fetching data: ${error}`);
+      });
+  }
+};
+
+
+logOut = () =>{
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  this.setState({user:null, token:null});
-}
-render(){
-  let{user,data}=this.state;
-  const authProps={
+  this.setState({ ser:null, token: null });
+};
+
+
+render() {
+  let{ user, posts, post, token} = this.state;
+  const authProps = {
     authenticateUser:this.authenticateUser
   }
    return (
@@ -88,16 +125,23 @@ render(){
        </header>
        <main>
             <Route exact path="/">
-              {user ? 
+              {user ?  (
               <React.Fragment>
                 <div>Hello {user}!</div>
-                <div>{data}</div>
-              </React.Fragment> :
-              <React.Fragment>
-                Please Register pr Login
-              </React.Fragment>
-}
-  
+                <div>
+                  {
+                    posts.map(post => (
+                      <div key = {post._id}>
+                        <h1>{post.title}</h1>
+                        <p>{post.body}</p>
+                      </div>
+                     )) }
+                   </div>
+                
+              </React.Fragment> 
+              ) : (
+             <React.Fragment>Please Register or Login</React.Fragment>
+              )}
             </Route>
             <Switch>
               <Route 
