@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import './styles.css';
+import './style.css';
 
 const CreatePost = ({ token, onPostCreated }) => {
   let history = useHistory();
