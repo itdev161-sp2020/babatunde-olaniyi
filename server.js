@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';  //import json web token
 import config from 'config'; //import config...
 import auth from './middleware/auth';
 import User from './models/User'; //our model to create users
-import User from './models/Post'; //our model to create users
+import Post from './models/Post'; //our model to create users
 
 //Initialize express application
 const app = express(); 
