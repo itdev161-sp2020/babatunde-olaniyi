@@ -1,4 +1,5 @@
 {
-    "mongoURI" : "mongodb+srv://ibaba_007:sharapine123@cluster0-nge0d.mongodb.net/test?retryWrites=true&w=majority"
+    "mongoURI" :"mongodb+srv://ibaba_007:Sharapine123@cluster0-nge0d.mongodb.net/test?retryWrites=true&w=majority"
+
 }
     
